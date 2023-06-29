@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<!--  ATTENTION au cache du navigateur : Votre navigateur peut conserver en mémoire des versions précédentes de votre formulaire ou des fichiers 
+  associés, ce qui peut entraîner l'affichage d'une version en cache plutôt que la version la plus récente  -->
+<html>
+  <head>
+    <title>Formulaire de contact</title>
+  </head>
+  <style>
+    .error{
+        color: red;
+    }
+  </style>
+  <body>
+    <h1>Formulaire de contact</h1>
+    <!-- l'attribut novalidate indique au navigateur de ne pas effectuer sa propre validation HTML5 lors de la soumission du formulaire. 
+    Cela désactive la validation automatique des contraintes de saisie requises par le navigateur, comme la vérification des champs obligatoires 
+    ou le format des adresses e-mail  -->
+    <!--  la méthode par défaut d'un formulaire est la méthode GET  -->
+    <!--  L'attribut action definit l'url/la route à laquelle les donnés seront transmises  -->
+    <!--  url_for('submit_form') = url correspondant à la fonction submit_form  -->
+    <form method="POST" action="{{ url_for('submit_form') }}" novalidate> 
+      <div>
+        <label for="prenom">Prénom:</label>
+        <input type="text" id="prenom" name="prenom" value="{{ request.form.get('prenom','') | escape }}" required> 
+        {% if errors and "Le prénom n'est pas valide." in errors %}
+          <span class="error">Le prénom n'est pas valide.</span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <label for="nom">Nom:</label>
+        <!--  Pour les champs où vous souhaitez afficher les réponses valides en cas d'erreur, utilisez value="{{ request.form['clé'] }}" 
+          pour pré-remplir les valeurs  -->
+        <!--  Si l'utilisateur n'a pas encore envoyé de valeur pour le champ de saisie avec l'attribut name="nom", 
+          la valeur correspondante de request.form['nom'] sera une chaîne vide ('') par défaut. Cela se produit lorsque le formulaire 
+          est affiché pour la première fois et que l'utilisateur n'a pas encore saisi de données  -->
+        <input type="text" id="nom" name="nom" value="{{ request.form['nom'] | escape }}" required>
+        {% if errors and "Le nom n'est pas valide." in errors %}
+          <span class="error">Le nom n'est pas valide.</span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" value="{{ request.form['email'] | escape }}" required>
+        {% if errors and "Le mail n'est pas valide." in errors %}
+          <span class="error">Le mail n'est pas valide.</span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <label for="pays">Pays:</label>
+        <select id="pays" name="pays" required>
+          <option value="">Sélectionnez un pays</option>
+          <option value="pays1" {% if request.form['pays'] == 'pays1' %}selected{% endif %}>Pays 1</option>
+          <option value="pays2" {% if request.form['pays'] == 'pays2' %}selected{% endif %}>Pays 2</option>
+          <option value="pays3" {% if request.form['pays'] == 'pays3' %}selected{% endif %}>Pays 3</option>
+        </select>
+        {% if errors and "Veuillez sélectionner un pays!" in errors %}
+          <span class="error">Veuillez sélectionner un pays!</span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <label for="message">Message:</label>
+        <textarea id="message" name="message" required>{{ request.form['message'] | escape }}</textarea>
+        {% if errors and "Veuillez entrer un message" in errors %}
+          <span class="error">Veuillez entrer un message</span>
+        {% endif %}
+      </div>
+      
+      <div>
+        <label>Genre:</label>
+        <input type="radio" id="genreH" name="genre" value="H" {% if request.form['genre'] == 'H' %}checked{% endif %} required>
+        <label for="genreH">Homme</label>
+        <input type="radio" id="genreF" name="genre" value="F" {% if request.form['genre'] == 'F' %}checked{% endif %} required>
+        <label for="genreF">Femme</label>
+        {% if errors and "Veuillez sélectionner un genre" in errors %}
+          <span class="error">Veuillez sélectionner un genre</span>
+        {% endif %}
+      </div>
+      <div>
+        <label>Sujet:</label>
+        <!-- 'sujets' est un champ de cases à cocher (checkbox) permettant de sélectionner PLUSIEURS options, d'où l'utilisation 
+        de .getlist pour obtenir toutes les valeurs sélectionnées  -->
+        <input type="checkbox" id="sujetReparation" name="sujets" 
+        value="Reparation" {% if 'Reparation' in request.form.getlist('sujets') %}checked{% endif %}>
+        <label for="sujetReparation">Réparation</label>
+        <input type="checkbox" id="sujetCommande" name="sujets" 
+        value="Commande" {% if 'Commande' in request.form.getlist('sujets') %}checked{% endif %}>
+        <label for="sujetCommande">Commande</label>
+        <!-- ... or not request.form.getlist('sujets') -->
+        <input type="checkbox" id="sujetAutre" name="sujets" 
+        value="Autre" {% if 'Autre' in request.form.getlist('sujets') %}checked{% endif %}>
+        <label for="sujetAutre">Autre</label>
+      </div>
+    
+      <!-- technique antispam du honeypot -->
+      <!--  Le honeypot est une technique utilisée pour détecter et bloquer les soumissions automatisées de formulaire par 
+        des robots ou des spambots. Les robots rempliront généralement tous les champs de formulaire, y compris les champs cachés. 
+        Si ce champ est rempli lors de la soumission du formulaire, vous pouvez considérer la soumission comme étant du spam  -->
+      <div style="display:none;">
+        <label for="spam">Ne pas remplir ce champ:</label>
+        <input type="text" id="spam" name="spam">
+      </div>
+
+      <div>
+        <input type="submit" value="Envoyer">
+      </div>
+    </form>
+  </body>
+</html>
+
+
+

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Thank You</title>
+  </head>
+  <body>
+    <h1>Merci de nous avoir contacté</h1>
+    <p>Voici un résumé des informations que vous avez soumises :</p>
+    <ul>
+      <!--  {{ variable | escape }} encode le HTML en texte brut tandis que {{ variable | safe }} indique au template engine (Jinja) que 
+      vous avez déjà échappé le texte vous-même, c'est-à-dire "il est sûr de le rendre directement". 
+      Il ne fera donc pas cet encodage pour vous  -->
+      <!--  La syntaxe des balises {{ variable }} dans Flask est utilisée pour les substitutions de variables. Cela signifie que vous pouvez 
+      insérer des valeurs dynamiques dans votre modèle HTML en utilisant ces balises  -->
+      <!-- ATTENTION: meême dans un commentaire, il faut mettre un terme quelconques entre les doubles accolades sinon une erreur sera levée:
+      jinja2.exceptions.TemplateSyntaxError: Expected an expression, got 'end of print statement  -->
+      <!--  Les balises {{ variable }} permettent donc d'insérer des valeurs dynamiques, d'exécuter des structures de contrôle conditionnelle 
+      et d'appliquer des filtres pour formater les données dans vos modèles HTML en utilisant Flask  -->
+      <li>Prénom : {{ prenom | safe }}</li>
+      <li>Nom : {{ nom }}</li>
+      <li>Email : {{ email }}</li>
+      <li>Pays : {{ pays }}</li>
+      <li>Message : {{ message }}</li>
+      <li>Genre : {{ genre }}</li>
+      <li>Sujets : {{ sujets }}</li>
+      <a href="{{ url_for('index') }}"> retourner au formulaire </a>
+    </ul>
+  </body>
+</html>
+
+
