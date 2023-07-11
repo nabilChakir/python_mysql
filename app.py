@@ -1,7 +1,14 @@
 from flask import Flask, render_template, request, render_template_string, redirect, url_for
-from markupsafe import escape   # DeprecationWarning: 'flask.escape' is deprecated and will be removed 
+
+# DeprecationWarning: 'flask.escape' is deprecated and will be removed 
 # in Flask 2.4. Import 'markupsafe.escape' instead
+from markupsafe import escape
+
+# Bibliothèque python-dotenv permet charger les variables d'environnement à partir du fichier .env se trouvant
+# idéalement à la racine du projet
+from dotenv import load_dotenv
 import mysql.connector
+import os
 import datetime
 import re
 
@@ -13,12 +20,23 @@ import re
 # le nom de l'application en fonction du module dans lequel vous l'exécutez.
 app = Flask(__name__)
 
+# Répertoire par défaut pour le fichier .env est le répertoire courant. Si on définit .env dans un répertoire différent,
+# il faudra mettre le chemin complet du fichier .env comme ceci: load_dotenv(dotenv_path="path_to_.env").
+# load_dotenv() charge les variables d'environnement à partir d'un fichier .env et les rend disponibles en tant que variables 
+# d'environnement dans le contexte d'exécution du script Python. Cela facilite l'utilisation et l'accès aux variables d'environnement 
+# spécifiques à votre projet sans avoir à les définir manuellement dans l'environnement global de votre système d'exploitation.
+load_dotenv()
+
+# print(os.environ.items())  # checkpoint pour constater ce qui est dit dans le commentaire précédent
+
 ## MySQL
 def connect_to_DB(): 
+    # os.getenv("variable_key") renvoie la valeur de la clé de la variable d'environnement, si elle existe.
+    passwd = os.getenv("MYSQL_PASSWORD")
     db_connection = mysql.connector.connect(
         host="localhost",
         user="root",
-        password="nabil"
+        password=passwd
         )
     # L'objet db_connection représente la connexion active à la base de données MySQL
     return db_connection
